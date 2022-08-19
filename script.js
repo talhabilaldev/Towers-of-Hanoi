@@ -21,7 +21,7 @@ function playAgain() {
     createGame();
 }
 function startTimer() {
-    let totalTime = 60 + ((numberOfDisks - 3) * (Math.pow(10, 2)));
+    let totalTime = 10 + ((numberOfDisks - 3) * (Math.pow(10, 2)));
     let timeLeftHtml = $("#timeLeft");
     let totalMins = Math.floor(totalTime / 60);
     let sec = totalTime - totalMins * 60;
@@ -36,7 +36,7 @@ function startTimer() {
         }
         if (totalTime == -1) {
             clearInterval(interval);
-            viewModal("Time is Up!");
+            viewModal("Unfortunately, Time is Up!");
             stopGame();
         }
     }
@@ -136,7 +136,7 @@ function enableDroppable(rodID) {
                 if (checkWin()) {
                     setTimeout(() => {
                         clearInterval(interval);
-                        viewModal("You Won!");
+                        viewModal("Congratulations, You Won!");
                         stopGame();
                     }, 100);
                 }
@@ -221,3 +221,4 @@ createGame();
 $("#diskUp").on("touchstart",diskUp);
 $("#diskDown").on("touchstart",diskDown);
 $(".playAgain").on("touchstart",playAgain);
+$(".closeModal").on("touchstart",function(){ $("#gameModal").modal('hide'); })
