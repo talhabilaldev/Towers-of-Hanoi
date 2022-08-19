@@ -5,42 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOH</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 </head>
 <body>
     <div class="container-fluid">
         <h1>Towers Of Hanoi</h1>
         <div class="row">
-            <button class="btn diskUpDown" id="diskDown">&#8595</button>
+            <button class="btn diskUpDown" id="diskDown" onclick="diskDown()">&#8595</button>
             <input type="number" class="form-group btn diskNumber" id="diskNumberValue" value="3" readonly>
-            <button class="btn diskUpDown" id="diskUp">&#8593</button>
+            <button class="btn diskUpDown" id="diskUp" onclick="diskUp()">&#8593</button>
             <p>(Disk number between 3-9)</p>
         </div>
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 " id="rod1-container">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 rod-container" id="rod1-container">
                 <div class="rod-container-content">
                     <h3>Rod-1</h3>
-                    <div id="rod-1"></div>
+                    <div id="rod-1" class="rod"=></div>
                 </div>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 " id="rod2-container">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 rod-container" id="rod2-container">
                 <div class="rod-container-content">
                     <h3>Rod-2</h3>
-                    <div id="rod-2"></div>
+                    <div id="rod-2" class="rod"></div>
                 </div>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 " id="rod3-container">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 rod-container" id="rod3-container">
                 <div class="rod-container-content">
                     <h3>Rod-3</h3>
-                    <div id="rod-3"></div>
+                    <div id="rod-3" class="rod"></div>
                 </div>
             </div>
         </div>
@@ -51,12 +50,31 @@
                 <h4>Remaining Time</h4>
                 <p id="timeLeft"></p>
             </div>
-            <div class="info btn btn-outline-info btn-sm" id="playAgain">
+            <div class="info btn btn-outline-info btn-sm playAgain playAgain-btn" onclick="playAgain()">
                 <h4>Play Again</h4>
             </div>
             <div class="info btn btn-outline-info btn-sm" id="moves">
                 <h4>Moves</h4>
                 <p>0</p>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="gameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Game Status
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="close-icon" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 id="textHere"></h2>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary playAgain" onclick="playAgain()" data-dismiss="modal">Play Again</button>
+                </div>
             </div>
         </div>
     </div>

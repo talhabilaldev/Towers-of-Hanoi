@@ -1,43 +1,42 @@
 var numberOfDisks = 3;
 var movesDone = 0;
 var interval = "";
-$("#diskUp").click(function () {
-    if ((numberOfDisks + 1) <= 9) {
-        $("#diskNumberValue").val(++numberOfDisks);
-        clearInterval(interval);
-        createGame();
-    }
-});
-$("#diskDown").click(function () {
+function diskDown() {
     if ((numberOfDisks - 1) >= 3) {
         $("#diskNumberValue").val(--numberOfDisks);
         clearInterval(interval);
         createGame();
     }
-});
-$("#playAgain").click(function () {
+}
+function diskUp() {
+    if ((numberOfDisks + 1) <= 9) {
+        $("#diskNumberValue").val(++numberOfDisks);
+        clearInterval(interval);
+        createGame();
+    }
+}
+function playAgain() {
     clearInterval(interval);
     stopGame();
     createGame();
-});
-createGame();
+}
 function startTimer() {
-    var totalTime = 300;
-    var timeLeftHtml = $("#timeLeft");
-    var totalMins = Math.floor(totalTime / 60);
-    var sec = totalTime - totalMins * 60;
+    let totalTime = 10 + ((numberOfDisks - 3) * (Math.pow(10, 2)));
+    let timeLeftHtml = $("#timeLeft");
+    let totalMins = Math.floor(totalTime / 60);
+    let sec = totalTime - totalMins * 60;
     timeLeftHtml.html(totalMins + "min " + sec + "sec");
     interval = setInterval(checkInterval, 1000);
     function checkInterval() {
         --totalTime;
         if (totalTime >= 0) {
-            var minutes = Math.floor(totalTime / 60);
-            var seconds = totalTime - minutes * 60;
+            let minutes = Math.floor(totalTime / 60);
+            let seconds = totalTime - minutes * 60;
             timeLeftHtml.html(minutes + "min " + seconds + "sec");
         }
         if (totalTime == -1) {
             clearInterval(interval);
-            alert("Time is Up!");
+            viewModal("Time is Up!");
             stopGame();
         }
     }
@@ -47,21 +46,28 @@ function createGame() {
     startTimer();
     movesDone = 0;
     $("#moves > p").html(0);
-    var createDisk = '';
+    $("div").disableSelection();
+    let createDisk = '';
+    let width = $(".rod-container-content").width();
+    const diskColors = ['756551', '695a49', '5d5040', '524639', '483d31', '3d352b', '382f25', '2c251c', '292218'];
     for (let i = numberOfDisks; i > 0; i--) {
         createDisk = '<div id="disk-' + (i) + '" class="disk">' + (i) + '</div>';
         $("#rod-1").append(createDisk);
+        $("#disk-"+i).css("width",width+(i*4)+"px");
+        $("#disk-"+i).css("background-color","#"+diskColors[i-1]);
     }
-    enableDraggable($("#rod-1").children()[$("#rod-1").children().length - 1].id);
+    let children = $("#rod-1").children();
+    enableDraggable(children[children.length - 1].id);
 }
 function stopGame() {
     for (let i = 1; i <= 3; i++) {
         let rodChilds = $("#rod-" + i).children();
-        var rodChildsLength = rodChilds.length;
+        let rodChildsLength = rodChilds.length;
         if (rodChildsLength > 0) {
             for (let j = 0; j < rodChildsLength; j++) {
-                if ($("#" + rodChilds[j].id).is('.ui-draggable')) {
-                    $("#" + rodChilds[j].id).draggable("destroy");
+                let child = $("#" + rodChilds[j].id);
+                if (child.is('.ui-draggable')) {
+                    child.draggable("destroy");
                 }
             }
         }
@@ -70,7 +76,7 @@ function stopGame() {
 function emptyRods() {
     for (let i = 1; i <= 3; i++) {
         let rodChilds = $("#rod-" + i).children();
-        var rodChildsLength = rodChilds.length;
+        let rodChildsLength = rodChilds.length;
         if (rodChildsLength > 0) {
             for (let j = 0; j < rodChildsLength; j++) {
                 rodChilds[j].remove();
@@ -88,18 +94,19 @@ function enableDraggable(diskID) {
             containment: ".container",
             cursor: "move",
             start: function (event, ui) {
-                var parentRod = $(this)[0].parentElement.id;
-                var currDisk = $(this)[0].id;
+                let parentRod = ui.helper[0].parentElement.id;
+                let currDisk = ui.helper[0].id;
                 for (let i = 1; i < 4; i++) {
-                    if (("rod-" + i) != parentRod && checkDroppable(currDisk, ("rod-" + i))) {
-                        enableDroppable(("rod-" + i));
+                    let currRodID = "rod-" + i;
+                    if (currRodID != parentRod && checkDroppable(currDisk, currRodID)) {
+                        enableDroppable(currRodID);
                     }
-                    else if (("rod-" + i) == parentRod && !($('#rod-' + i).is('.ui-droppable'))) {
-                        enableDroppable(("rod-" + i));
+                    else if (currRodID == parentRod && !($("#" + currRodID).is('.ui-droppable'))) {
+                        enableDroppable(currRodID);
                         $('#rod-' + i).droppable("disable");
                     }
                     else {
-                        disableDroppable(("rod-" + i));
+                        disableDroppable(currRodID);
                     }
                 }
             }
@@ -114,21 +121,22 @@ function enableDroppable(rodID) {
         $('#' + rodID).droppable({
             tolerance: "touch",
             drop: function (event, ui) {
+                console.log(event)
+                console.log(ui)
                 $("#moves > p").html(++movesDone);
-                var diskMoved = event.originalEvent.target;
+                let diskMoved = ui.draggable[0];
                 $("#" + diskMoved.id).css({
                     left: 0,
                     top: 0
                 });
-                var diskPrevParent = $("#" + diskMoved.id).parent()[0].id;
                 $("#" + this.id).append(diskMoved);
-                var diskNewParent = $("#" + diskMoved.id).parent()[0].id;
+                let diskNewParent = $("#" + diskMoved.id).parent()[0].id;
                 disableDraggable(diskNewParent);
                 diskEnableDraggable(diskNewParent);
                 if (checkWin()) {
                     setTimeout(() => {
                         clearInterval(interval);
-                        alert("You Won!");
+                        viewModal("You Won!");
                         stopGame();
                     }, 100);
                 }
@@ -137,8 +145,8 @@ function enableDroppable(rodID) {
     }
 }
 function checkDroppable(disk, rod) {
-    var rodChildren = $("#" + rod).children();
-    var rodChildrenLength = rodChildren.length;
+    let rodChildren = $("#" + rod).children();
+    let rodChildrenLength = rodChildren.length;
     if (rodChildrenLength == 0) {
         return true;
     }
@@ -151,19 +159,16 @@ function checkDroppable(disk, rod) {
 }
 function diskEnableDraggable(rodID) {
     for (let i = 1; i <= 3; i++) {
-        if ($("#rod-" + i) != rodID && $("#rod-" + i).children().length > 0) {
-            enableDraggable($("#rod-" + i).children()[$("#rod-" + i).children().length - 1].id);
+        let children = $("#rod-" + i).children();
+        if ($("#rod-" + i) != rodID && children.length > 0) {
+            enableDraggable(children[children.length - 1].id);
         }
     }
 }
 function disableDraggable(rodID) {
-    var childArray = $("#" + rodID).children();
-    if (childArray.length > 0) {
-        for (let i = 0; i < childArray.length - 1; i++) {
-            if ($('#' + childArray[i].id).is('.ui-draggable')) {
-                $("#" + childArray[i].id).draggable("disable");
-            }
-        }
+    let childArray = $("#" + rodID).children();
+    if (childArray.length > 1) {
+        $("#" + childArray[childArray.length - 2].id).draggable("disable");
     }
 }
 function disableDroppable(rodID) {
@@ -172,9 +177,9 @@ function disableDroppable(rodID) {
     }
 }
 function checkWin() {
-    var totalDisks = numberOfDisks;
-    var rod3Children = $("#rod-3").children();
-    var rod3Length = rod3Children.length;
+    let totalDisks = numberOfDisks;
+    let rod3Children = $("#rod-3").children();
+    let rod3Length = rod3Children.length;
     if (rod3Length == totalDisks) {
         for (let i = 0; i < rod3Length; i++) {
             if (rod3Children[i].id != ("disk-" + (totalDisks--))) {
@@ -186,6 +191,10 @@ function checkWin() {
     else {
         return false;
     }
+}
+function viewModal(text) {
+    $("#textHere").html(text);
+    $("#gameModal").modal();
 }
 function touchHandler(event) {
     var touch = event.changedTouches[0];
@@ -208,3 +217,7 @@ function init() {
     document.addEventListener("touchcancel", touchHandler, true);
 }
 init();
+createGame();
+$("#diskUp").on("touchstart",diskUp);
+$("#diskDown").on("touchstart",diskDown);
+$(".playAgain").on("touchstart",playAgain);
