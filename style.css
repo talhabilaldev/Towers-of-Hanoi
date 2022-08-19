@@ -1,0 +1,163 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #424140 0%, #535251 100%);
+}
+.container-fluid{
+    background-color: #626291dd;
+    text-align: center;
+    color: white;
+}
+.diskNumber, .diskUpDown{
+color: #3a3636;
+    margin: auto 10px 10px 10px;
+    font-size: 2.5rem;
+    font-weight: bold;
+    background-color: #7f7f88dd;
+}
+.diskNumber{
+    width: 15rem;    
+}
+.diskUpDown{
+    width: 5rem;
+}
+#rod1-container, #rod2-container, #rod3-container{
+    height: 500px;
+    display: flex;
+    justify-content: center;
+}
+.rod-container-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#rod1-container{
+    background-color: #deb887;
+}
+#rod2-container{
+    background-color: #8b8072;
+}
+#rod3-container{
+    background-color: #037274;
+}
+
+#rod-1, #rod-2, #rod-3{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: end;
+    align-items: center;
+    height: 75%;
+    width: 12px;
+    border-radius: 5px;
+    background-color: #a43a09e4;
+    touch-action: none;
+}
+
+.disk{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    height: 8%;
+    margin: 5px 0px;
+    color: #ffffff;
+    z-index: 1;
+}
+#disk-1{
+    width: 80px;
+    background-color: #756551;
+}
+#disk-2{
+    width: 90px;
+    background-color: #695a49;
+}
+#disk-3{
+    width: 100px;
+    background-color: #5d5040;
+}
+#disk-4{
+    width: 110px;
+    background-color: #524639;
+}
+#disk-5{
+    width: 120px;
+    background-color: #483d31;
+}
+#disk-6{
+    width: 130px;
+    background-color: #3d352b;
+}
+#disk-7{
+    width: 140px;
+    background-color: #382f25;
+}
+#disk-8{
+    width: 150px;
+    background-color: #2c251c;
+}
+#disk-9{
+    width: 160px;
+    background-color: #292218;
+}
+@media screen and (max-width:768px){
+    .container{
+        margin: 0 10px;
+    }
+}
+@media screen and (max-width:550px){
+    #disk-1{
+        width: 60px;
+    }
+    #disk-2{
+        width: 65px;
+    }
+    #disk-3{
+        width: 70px;
+    }
+    #disk-4{
+        width: 75px;
+    }
+    #disk-5{
+        width: 80px;
+    }
+    #disk-6{
+        width: 85px;
+    }
+    #disk-7{
+        width: 90px;
+    }
+    #disk-8{
+        width: 95px;
+    }
+    #disk-9{
+        width: 100px;
+    }
+}
+.buttons-container{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+.info {
+    min-width: 20%;
+    background-color: #7f7f88dd;
+    color: #3a3636;
+    font-size: 2rem;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.info:hover{
+    background-color: #4b3333;
+    color: #999191;
+}
+#playAgain{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#playAgain>h4{
+    font-weight: bolder;
+}
+document{
+    touch-action: none;
+}
