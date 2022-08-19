@@ -21,7 +21,7 @@ function playAgain() {
     createGame();
 }
 function startTimer() {
-    let totalTime = 10 + ((numberOfDisks - 3) * (Math.pow(10, 2)));
+    let totalTime = 60 + ((numberOfDisks - 3) * (Math.pow(10, 2)));
     let timeLeftHtml = $("#timeLeft");
     let totalMins = Math.floor(totalTime / 60);
     let sec = totalTime - totalMins * 60;
