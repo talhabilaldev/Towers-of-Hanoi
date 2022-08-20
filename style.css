@@ -86,10 +86,6 @@ color: #3a3636;
 .playAgain-btn>h4{
     font-weight: bolder;
 }
-.modal{
-    display: flex;
-    align-items: center;
-}
 .modal-body{
     display: flex;
     justify-content: center;
@@ -101,7 +97,6 @@ color: #3a3636;
 }
 .modal-title a{
     text-decoration: none;
-    color: #000;
 }
 .close-btn{
     color: #000;

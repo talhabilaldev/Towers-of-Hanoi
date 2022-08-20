@@ -21,24 +21,19 @@ function playAgain() {
     createGame();
 }
 function startTimer() {
-    let totalTime = 10 + ((numberOfDisks - 3) * (Math.pow(10, 2)));
-    let timeLeftHtml = $("#timeLeft");
-    let totalMins = Math.floor(totalTime / 60);
-    let sec = totalTime - totalMins * 60;
-    timeLeftHtml.html(totalMins + "min " + sec + "sec");
+    let totalTime = 60 + ((numberOfDisks - 3) * (Math.pow(10, 2)));
+    checkInterval();
     interval = setInterval(checkInterval, 1000);
     function checkInterval() {
-        --totalTime;
-        if (totalTime >= 0) {
-            let minutes = Math.floor(totalTime / 60);
-            let seconds = totalTime - minutes * 60;
-            timeLeftHtml.html(minutes + "min " + seconds + "sec");
-        }
-        if (totalTime == -1) {
+        let minutes = Math.floor(totalTime / 60);
+        let seconds = totalTime - minutes * 60;
+        $("#timeLeft").html(minutes + "min " + seconds + "sec");
+        if (totalTime == 0) {
             clearInterval(interval);
             viewModal("Unfortunately, Time is Up!");
             stopGame();
         }
+        totalTime--;
     }
 }
 function createGame() {
@@ -53,7 +48,7 @@ function createGame() {
     for (let i = numberOfDisks; i > 0; i--) {
         createDisk = '<div id="disk-' + (i) + '" class="disk">' + (i) + '</div>';
         $("#rod-1").append(createDisk);
-        $("#disk-"+i).css("width",width+(i*4)+"px");
+        $("#disk-"+i).css("width",width+(i*5)+"px");
         $("#disk-"+i).css("background-color","#"+diskColors[i-1]);
     }
     let children = $("#rod-1").children();
@@ -62,9 +57,8 @@ function createGame() {
 function stopGame() {
     for (let i = 1; i <= 3; i++) {
         let rodChilds = $("#rod-" + i).children();
-        let rodChildsLength = rodChilds.length;
-        if (rodChildsLength > 0) {
-            for (let j = 0; j < rodChildsLength; j++) {
+        if (rodChilds.length > 0) {
+            for (let j = 0; j < rodChilds.length; j++) {
                 let child = $("#" + rodChilds[j].id);
                 if (child.is('.ui-draggable')) {
                     child.draggable("destroy");
@@ -76,9 +70,8 @@ function stopGame() {
 function emptyRods() {
     for (let i = 1; i <= 3; i++) {
         let rodChilds = $("#rod-" + i).children();
-        let rodChildsLength = rodChilds.length;
-        if (rodChildsLength > 0) {
-            for (let j = 0; j < rodChildsLength; j++) {
+        if (rodChilds.length > 0) {
+            for (let j = 0; j < rodChilds.length; j++) {
                 rodChilds[j].remove();
             }
         }
@@ -98,15 +91,13 @@ function enableDraggable(diskID) {
                 let currDisk = ui.helper[0].id;
                 for (let i = 1; i < 4; i++) {
                     let currRodID = "rod-" + i;
-                    if (currRodID != parentRod && checkDroppable(currDisk, currRodID)) {
+                    if (checkDroppable(currDisk, currRodID)) {
                         enableDroppable(currRodID);
-                    }
-                    else if (currRodID == parentRod && !($("#" + currRodID).is('.ui-droppable'))) {
-                        enableDroppable(currRodID);
-                        $('#rod-' + i).droppable("disable");
                     }
                     else {
-                        disableDroppable(currRodID);
+                        if ($('#' + currRodID).is('.ui-droppable')) {
+                            $("#" + currRodID).droppable("disable");
+                        }
                     }
                 }
             }
@@ -121,8 +112,6 @@ function enableDroppable(rodID) {
         $('#' + rodID).droppable({
             tolerance: "touch",
             drop: function (event, ui) {
-                console.log(event)
-                console.log(ui)
                 $("#moves > p").html(++movesDone);
                 let diskMoved = ui.draggable[0];
                 $("#" + diskMoved.id).css({
@@ -131,13 +120,13 @@ function enableDroppable(rodID) {
                 });
                 $("#" + this.id).append(diskMoved);
                 let diskNewParent = $("#" + diskMoved.id).parent()[0].id;
-                disableDraggable(diskNewParent);
+                diskDisableDraggable(diskNewParent);
                 diskEnableDraggable(diskNewParent);
                 if (checkWin()) {
                     setTimeout(() => {
                         clearInterval(interval);
-                        viewModal("Congratulations, You Won!");
                         stopGame();
+                        viewModal("Congratulations, You Won!");
                     }, 100);
                 }
             }
@@ -146,11 +135,7 @@ function enableDroppable(rodID) {
 }
 function checkDroppable(disk, rod) {
     let rodChildren = $("#" + rod).children();
-    let rodChildrenLength = rodChildren.length;
-    if (rodChildrenLength == 0) {
-        return true;
-    }
-    else if (rodChildrenLength > 0 && rodChildren[rodChildrenLength - 1].innerHTML > $("#" + disk).html()) {
+    if (rodChildren.length == 0 || (rodChildren.length > 0 && rodChildren[rodChildren.length - 1].innerHTML > $("#" + disk).html()) ) {
         return true;
     }
     else {
@@ -165,15 +150,10 @@ function diskEnableDraggable(rodID) {
         }
     }
 }
-function disableDraggable(rodID) {
+function diskDisableDraggable(rodID) {
     let childArray = $("#" + rodID).children();
     if (childArray.length > 1) {
         $("#" + childArray[childArray.length - 2].id).draggable("disable");
-    }
-}
-function disableDroppable(rodID) {
-    if ($('#' + rodID).is('.ui-droppable')) {
-        $("#" + rodID).droppable("disable");
     }
 }
 function checkWin() {
@@ -194,7 +174,11 @@ function checkWin() {
 }
 function viewModal(text) {
     $("#textHere").html(text);
-    $("#gameModal").modal();
+    $("#gameModal").modal().css({
+        "display" : "flex",
+        "justify-content" : "center",
+        "align-items" : "center"
+    });
 }
 function touchHandler(event) {
     var touch = event.changedTouches[0];
@@ -221,4 +205,4 @@ createGame();
 $("#diskUp").on("touchstart",diskUp);
 $("#diskDown").on("touchstart",diskDown);
 $(".playAgain").on("touchstart",playAgain);
-$(".closeModal").on("touchstart",function(){ $("#gameModal").modal('hide'); })
+$(".closeModal").on("touchstart",function(){ $("#gameModal").modal('hide'); });
