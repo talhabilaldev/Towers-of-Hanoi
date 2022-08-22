@@ -7,18 +7,22 @@
     <title>TOH</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="jquery.ui.touch-punch.min.js"></script>
 </head>
 <body>
     <div class="container-fluid">
         <h1>Towers Of Hanoi</h1>
         <div class="row">
-            <button class="btn diskUpDown" id="diskDown" onclick="diskDown()">&#8595</button>
-            <input type="number" class="form-group btn diskNumber" id="diskNumberValue" value="3" readonly>
-            <button class="btn diskUpDown" id="diskUp" onclick="diskUp()">&#8593</button>
+            <button class="btn UndoRedo controls material-icons" id="undo-btn" onclick="undo()">undo</button>
+            <button class="btn diskUpDown controls" id="diskDown" onclick="diskDown()">&#8595</button>
+            <input type="number" class="form-group btn diskNumber controls" id="diskNumberValue" value="3" readonly>
+            <button class="btn diskUpDown controls" id="diskUp" onclick="diskUp()">&#8593</button>
+            <button class="btn UndoRedo controls material-icons" id="redo-btn" onclick="redo()">redo</button>
             <p>(Disk number between 3-9)</p>
         </div>
     </div>

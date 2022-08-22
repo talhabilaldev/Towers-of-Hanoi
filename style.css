@@ -8,15 +8,15 @@ body{
     text-align: center;
     color: white;
 }
-.diskNumber, .diskUpDown{
-color: #3a3636;
+.controls{
+    color: #3a3636;
     margin: auto 10px 10px 10px;
     font-size: 2.5rem;
     font-weight: bold;
     background-color: #7f7f88dd;
 }
 .diskNumber{
-    width: 15rem;    
+    width: 20%;    
 }
 .diskUpDown{
     width: 5rem;
