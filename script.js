@@ -27,7 +27,7 @@ function createGame() {
     changeUndoRedoColor();
     movesDone = 0;
     $("#moves > p").html(0);
-    $(".rod-container-content").disableSelection();
+    $("div").disableSelection();
     let createDisk = '';
     let width = $(".rod-container-content").width();
     const diskColors = ['756551', '695a49', '5d5040', '524639', '483d31', '3d352b', '382f25', '2c251c', '292218'];
@@ -215,12 +215,12 @@ function playAgain() {
     createGame();
 }
 function changeUpDownDiskColor(){
-    numberOfDisks==3 ? $("#diskDown").css("background-color","#bb0000d3") : $("#diskDown").css("background-color","#887f7fdd");
-    numberOfDisks==9 ? $("#diskUp").css("background-color","#bb0000d3") : $("#diskUp").css("background-color","#887f7fdd");
+    numberOfDisks==3 ? $("#diskDown").addClass("disabledClass") : $("#diskDown").removeClass("disabledClass");
+    numberOfDisks==9 ? $("#diskUp").addClass("disabledClass") : $("#diskUp").removeClass("disabledClass");
 }
 function changeUndoRedoColor(){
-    undoArray.length>0 ? $("#undo-btn").css("background-color","#887f7fdd") : $("#undo-btn").css("background-color","#bb0000d3");
-    redoArray.length>0 ? $("#redo-btn").css("background-color","#887f7fdd") : $("#redo-btn").css("background-color","#bb0000d3");
+    undoArray.length>0 ? $("#undo-btn").removeClass("disabledClass") : $("#undo-btn").addClass("disabledClass");
+    redoArray.length>0 ? $("#redo-btn").removeClass("disabledClass") : $("#redo-btn").addClass("disabledClass");
 }
 function viewModal(text) {
     $("#textHere").html(text);

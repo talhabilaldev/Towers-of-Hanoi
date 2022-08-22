@@ -21,6 +21,11 @@ body{
 .diskUpDown{
     width: 5rem;
 }
+.disabledClass{
+    cursor: not-allowed;
+    opacity: 0.9;
+    background-color: #bb0000d3;
+}
 .rod-container{
     height: 500px;
     display: flex;
@@ -30,6 +35,7 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
 }
 #rod1-container{
     background-color: #deb887;
