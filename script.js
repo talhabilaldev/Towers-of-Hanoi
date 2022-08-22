@@ -51,6 +51,8 @@ function stopGame() {
             }
         }
     }
+    emptyArrays(undoArray);
+    emptyArrays(redoArray);
 }
 function enableDraggable(diskID) {
     $("#" + diskID).draggable({
