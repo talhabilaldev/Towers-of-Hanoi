@@ -3,7 +3,7 @@ var movesDone = interval = 0;
 const undoArray = [];
 const redoArray = [];
 function startTimer() {
-    let totalTime = 60 + ((numberOfDisks - 3) * (Math.pow(11, 2)));
+    let totalTime = 60 + ((numberOfDisks - 3) * (Math.pow(12, 2)));
     function checkInterval() {
         let minutes = Math.floor(totalTime / 60);
         let seconds = totalTime - minutes * 60;
@@ -24,7 +24,6 @@ function createGame() {
     emptyArrays(undoArray);
     emptyArrays(redoArray);
     changeUpDownDiskColor();
-    changeUndoRedoColor();
     movesDone = 0;
     $("#moves > p").html(0);
     $("div").disableSelection();
@@ -32,7 +31,7 @@ function createGame() {
     let width = $(".rod-container-content").width();
     const diskColors = ['756551', '695a49', '5d5040', '524639', '483d31', '3d352b', '382f25', '2c251c', '292218'];
     for (let i = numberOfDisks; i > 0; i--) {
-        createDisk = '<div id="disk-' + (i) + '" class="disk">' + (i) + '</div>';
+        createDisk = '<div id="disk-' + i + '" class="disk">' + i + '</div>';
         $("#rod-1").append(createDisk);
         $("#disk-"+i).css("width",width+(i*5)+"px");
         $("#disk-"+i).css("background-color","#"+diskColors[i-1]);
@@ -47,65 +46,55 @@ function stopGame() {
             for (let j = 0; j < rodChilds.length; j++) {
                 let child = $("#" + rodChilds[j].id);
                 if (child.is('.ui-draggable')) {
-                    child.draggable("disable");
+                    child.draggable("destroy");
                 }
             }
         }
     }
 }
 function enableDraggable(diskID) {
-    if ($('#' + diskID).is('.ui-draggable-disabled')) {
-        $('#' + diskID).draggable("enable");
-    }
-    else {
-        $("#" + diskID).draggable({
-            revert: "invalid",
-            containment: ".container",
-            cursor: "move",
-            start: function (event, ui) {
-                let currDisk = ui.helper[0].id;
-                for (let i = 1; i <= 3; i++) {
-                    let currRodID = "rod-" + i;
-                    if (checkDroppable(currDisk, currRodID)) {
-                        enableDroppable(currRodID);
-                    }
-                    else if($("#"+currRodID).is('.ui-droppable')){
-                        $("#"+currRodID).droppable("disable");
-                    }
+    $("#" + diskID).draggable({
+        revert: "invalid",
+        containment: ".container",
+        cursor: "move",
+        start: function (event, ui) {
+            let currDisk = ui.helper[0].id;
+            for (let i = 1; i <= 3; i++) {
+                let currRodID = "rod-" + i;
+                if (checkDroppable(currDisk, currRodID)) {
+                    enableDroppable(currRodID);
+                }
+                else if($("#"+currRodID).is('.ui-droppable')){
+                    $("#"+currRodID).droppable("destroy");
                 }
             }
-        });
-    }
+        }
+    });
 }
 function enableDroppable(rodID) {
-    if ($('#' + rodID).is('.ui-droppable-disabled')) {
-        $('#' + rodID).droppable("enable");
-    }
-    else {
-        $('#' + rodID).droppable({
-            tolerance: "touch",
-            drop: function (event, ui) {
-                $("#moves > p").html(++movesDone);
-                let diskMoved = ui.draggable[0];
-                $("#" + diskMoved.id).css({
-                    left: 0,
-                    top: 0
-                });
-                let diskPrevParent = $("#" + diskMoved.id).parent()[0].id;
-                $("#" + this.id).append(diskMoved);
-                let diskNewParent = $("#" + diskMoved.id).parent()[0].id;
-                undoArray.push({
-                    diskPrevParent: diskPrevParent,
-                    diskNewParent: diskNewParent,
-                    diskID: diskMoved.id
-                });
-                diskDisableDraggable(diskNewParent);
-                diskEnableDraggable(diskNewParent);
-                changeUndoRedoColor();
-                checkWin();
-            }
-        });
-    }
+    $('#' + rodID).droppable({
+        tolerance: "touch",
+        drop: function (event, ui) {
+            $("#moves > p").html(++movesDone);
+            let diskMoved = ui.draggable[0];
+            $("#" + diskMoved.id).css({
+                left: 0,
+                top: 0
+            });
+            let diskPrevParent = $("#" + diskMoved.id).parent()[0].id;
+            $("#" + this.id).append(diskMoved);
+            let diskNewParent = $("#" + diskMoved.id).parent()[0].id;
+            undoArray.push({
+                diskPrevParent: diskPrevParent,
+                diskNewParent: diskNewParent,
+                diskID: diskMoved.id
+            });
+            diskDisableDraggable(diskNewParent);
+            diskEnableDraggable(diskNewParent);
+            emptyArrays(redoArray);
+            checkWin();
+        }
+    });
 }
 function checkDroppable(disk, rod) {
     let rodChildren = $("#" + rod).children();
@@ -127,7 +116,7 @@ function diskEnableDraggable(rodID) {
 function diskDisableDraggable(rodID) {
     let childArray = $("#" + rodID).children();
     if (childArray.length > 1) {
-        $("#" + childArray[childArray.length - 2].id).draggable("disable");
+        $("#" + childArray[childArray.length - 2].id).draggable("destroy");
     }
 }
 function checkWin() {
@@ -161,9 +150,10 @@ function emptyRods() {
     }
 }
 function emptyArrays(array){
-    for(let i=0;i<array.length;i++){
+    while(array.length > 0) {
         array.pop();
     }
+    changeUndoRedoColor();
 }
 function undo(){
     if(undoArray.length>0){
@@ -176,8 +166,8 @@ function undo(){
             diskNewParent: move.diskPrevParent,
             diskID: move.diskID
         });
+        changeUndoRedoColor();
     }
-    changeUndoRedoColor();
 }
 function redo(){
     if(redoArray.length>0){
@@ -190,8 +180,8 @@ function redo(){
             diskNewParent: move.diskPrevParent,
             diskID: move.diskID
         });
+        changeUndoRedoColor();
     }
-    changeUndoRedoColor();
 }
 function diskDown() {
     if ((numberOfDisks - 1) >= 3) {
@@ -199,7 +189,6 @@ function diskDown() {
         clearInterval(interval);
         createGame();
     }
-    changeUpDownDiskColor();
 }
 function diskUp() {
     if ((numberOfDisks + 1) <= 9) {
@@ -207,7 +196,6 @@ function diskUp() {
         clearInterval(interval);
         createGame();
     }
-    changeUpDownDiskColor();
 }
 function playAgain() {
     clearInterval(interval);
