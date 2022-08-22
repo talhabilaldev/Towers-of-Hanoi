@@ -13,10 +13,10 @@ body{
     margin: auto 10px 10px 10px;
     font-size: 2.5rem;
     font-weight: bold;
-    background-color: #7f7f88dd;
+    background-color: #887f7fdd;  
 }
 .diskNumber{
-    width: 20%;    
+    width: 20%;
 }
 .diskUpDown{
     width: 5rem;
@@ -45,7 +45,7 @@ body{
     flex-direction: column-reverse;
     justify-content: end;
     align-items: center;
-    height: 75%;
+    height: 70%;
     width: 12px;
     border-radius: 5px;
     background-color: #a43a09e4;
@@ -56,21 +56,21 @@ body{
     justify-content: center;
     align-items: center;
     border-radius: 20px;
-    height: 8%;
-    margin: 5px 0px;
+    height: 10%;
+    margin: 2px 0px;
     color: #ffffff;
     z-index: 1;
 }
 .buttons-container{
-    margin-top: 20px;
+    margin: 30px 0px;
     display: flex;
-    justify-content: space-around;
+    justify-content:space-between;
 }
 .info {
-    min-width: 20%;
+    min-width: 15%;
     background-color: #7f7f88dd;
     color: #3a3636;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     transition: 0.3s;
 }

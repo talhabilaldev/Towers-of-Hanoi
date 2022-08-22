@@ -2,51 +2,6 @@ var numberOfDisks = 3;
 var movesDone = interval = 0;
 const undoArray = [];
 const redoArray = [];
-function undo(){
-    if(undoArray.length>0){
-        let move = undoArray.pop();
-        $("#"+move.diskPrevParent).append($("#"+move.diskID));
-        diskDisableDraggable(move.diskPrevParent);
-        diskEnableDraggable(move.diskPrevParent);
-        redoArray.push({
-            diskPrevParent: move.diskNewParent,
-            diskNewParent: move.diskPrevParent,
-            diskID: move.diskID
-        });
-    }
-}
-function redo(){
-    if(redoArray.length>0){
-        let move = redoArray.pop();
-        $("#"+move.diskPrevParent).append($("#"+move.diskID));
-        diskDisableDraggable(move.diskPrevParent);
-        diskEnableDraggable(move.diskPrevParent);
-        undoArray.push({
-            diskPrevParent: move.diskNewParent,
-            diskNewParent: move.diskPrevParent,
-            diskID: move.diskID
-        });
-    }
-}
-function diskDown() {
-    if ((numberOfDisks - 1) >= 3) {
-        $("#diskNumberValue").val(--numberOfDisks);
-        clearInterval(interval);
-        createGame();
-    }
-}
-function diskUp() {
-    if ((numberOfDisks + 1) <= 9) {
-        $("#diskNumberValue").val(++numberOfDisks);
-        clearInterval(interval);
-        createGame();
-    }
-}
-function playAgain() {
-    clearInterval(interval);
-    stopGame();
-    createGame();
-}
 function startTimer() {
     let totalTime = 60 + ((numberOfDisks - 3) * (Math.pow(11, 2)));
     function checkInterval() {
@@ -68,6 +23,8 @@ function createGame() {
     startTimer();
     emptyArrays(undoArray);
     emptyArrays(redoArray);
+    changeUpDownDiskColor();
+    changeUndoRedoColor();
     movesDone = 0;
     $("#moves > p").html(0);
     $(".rod-container-content").disableSelection();
@@ -94,21 +51,6 @@ function stopGame() {
                 }
             }
         }
-    }
-}
-function emptyRods() {
-    for (let i = 1; i <= 3; i++) {
-        let rodChilds = $("#rod-" + i).children();
-        if (rodChilds.length > 0) {
-            for (let j = 0; j < rodChilds.length; j++) {
-                rodChilds[j].remove();
-            }
-        }
-    }
-}
-function emptyArrays(array){
-    for(let i=0;i<array.length;i++){
-        array.pop();
     }
 }
 function enableDraggable(diskID) {
@@ -159,6 +101,7 @@ function enableDroppable(rodID) {
                 });
                 diskDisableDraggable(diskNewParent);
                 diskEnableDraggable(diskNewParent);
+                changeUndoRedoColor();
                 checkWin();
             }
         });
@@ -206,6 +149,78 @@ function checkWin() {
             }, 100);
         }
     }
+}
+function emptyRods() {
+    for (let i = 1; i <= 3; i++) {
+        let rodChilds = $("#rod-" + i).children();
+        if (rodChilds.length > 0) {
+            for (let j = 0; j < rodChilds.length; j++) {
+                rodChilds[j].remove();
+            }
+        }
+    }
+}
+function emptyArrays(array){
+    for(let i=0;i<array.length;i++){
+        array.pop();
+    }
+}
+function undo(){
+    if(undoArray.length>0){
+        let move = undoArray.pop();
+        $("#"+move.diskPrevParent).append($("#"+move.diskID));
+        diskDisableDraggable(move.diskPrevParent);
+        diskEnableDraggable(move.diskPrevParent);
+        redoArray.push({
+            diskPrevParent: move.diskNewParent,
+            diskNewParent: move.diskPrevParent,
+            diskID: move.diskID
+        });
+    }
+    changeUndoRedoColor();
+}
+function redo(){
+    if(redoArray.length>0){
+        let move = redoArray.pop();
+        $("#"+move.diskPrevParent).append($("#"+move.diskID));
+        diskDisableDraggable(move.diskPrevParent);
+        diskEnableDraggable(move.diskPrevParent);
+        undoArray.push({
+            diskPrevParent: move.diskNewParent,
+            diskNewParent: move.diskPrevParent,
+            diskID: move.diskID
+        });
+    }
+    changeUndoRedoColor();
+}
+function diskDown() {
+    if ((numberOfDisks - 1) >= 3) {
+        $("#diskNumberValue").val(--numberOfDisks);
+        clearInterval(interval);
+        createGame();
+    }
+    changeUpDownDiskColor();
+}
+function diskUp() {
+    if ((numberOfDisks + 1) <= 9) {
+        $("#diskNumberValue").val(++numberOfDisks);
+        clearInterval(interval);
+        createGame();
+    }
+    changeUpDownDiskColor();
+}
+function playAgain() {
+    clearInterval(interval);
+    stopGame();
+    createGame();
+}
+function changeUpDownDiskColor(){
+    numberOfDisks==3 ? $("#diskDown").css("background-color","#bb0000d3") : $("#diskDown").css("background-color","#887f7fdd");
+    numberOfDisks==9 ? $("#diskUp").css("background-color","#bb0000d3") : $("#diskUp").css("background-color","#887f7fdd");
+}
+function changeUndoRedoColor(){
+    undoArray.length>0 ? $("#undo-btn").css("background-color","#887f7fdd") : $("#undo-btn").css("background-color","#bb0000d3");
+    redoArray.length>0 ? $("#redo-btn").css("background-color","#887f7fdd") : $("#redo-btn").css("background-color","#bb0000d3");
 }
 function viewModal(text) {
     $("#textHere").html(text);
